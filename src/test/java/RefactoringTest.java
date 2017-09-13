@@ -8,17 +8,15 @@ import java.util.List;
 
 
 public class RefactoringTest extends BaseTest {
-    private static final String LOGIN = "";
-    private static final String PASSWORD = "";
     @Test(description = "Login to account", priority = 0)
     public void loginTest() {
         driver.get(baseUrl);
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.fillField(loginPage.getEmail(), LOGIN);
-        loginPage.fillField(loginPage.getPassword(), PASSWORD);
+        loginPage.fillField(loginPage.getEmail(), properties.getProperty("login"));
+        loginPage.fillField(loginPage.getPassword(), properties.getProperty("password"));
 
-        loginPage.checkFillField(LOGIN, loginPage.getEmail());
-        loginPage.checkFillField(PASSWORD, loginPage.getPassword());
+        loginPage.checkFillField(properties.getProperty("login"), loginPage.getEmail());
+        loginPage.checkFillField(properties.getProperty("password"), loginPage.getPassword());
 
         loginPage.submit();
     }
