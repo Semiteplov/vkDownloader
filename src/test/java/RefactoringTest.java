@@ -8,8 +8,8 @@ import java.util.List;
 
 
 public class RefactoringTest extends BaseTest {
-    private static final String LOGIN = "79153192141";
-    private static final String PASSWORD = "Teplovaolga27";
+    private static final String LOGIN = "";
+    private static final String PASSWORD = "";
     @Test(description = "Login to account", priority = 0)
     public void loginTest() {
         driver.get(baseUrl);
