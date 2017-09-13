@@ -6,47 +6,36 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AudioPage extends BasePage {
     private static final String AUDIO_FILE_LOCATOR = "audio-download-link";
-    private static final String AUDIO_FILES_LOCATOR = "//div[contains(@class, 'audio_row audio_row_with_cover')]";
-    public AudioPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
-        this.driver = driver;
-        wait = new WebDriverWait(driver,5);
-    }
 
-    public List<WebElement> getAudioElems() {
-        while (driver.findElements(By.xpath(AUDIO_FILES_LOCATOR)).size() !=
-                driver.findElements(By.className(AUDIO_FILE_LOCATOR)).size()) {
+        public AudioPage(WebDriver driver) {
+            PageFactory.initElements(driver, this);
+            this.driver = driver;
+            wait = new WebDriverWait(driver,5);
         }
-        return driver.findElements(By.className(AUDIO_FILE_LOCATOR));
-    }
 
-    public List<String> downloadElems(List<WebElement> listElems, String downloadDir) {
-        List<String> fileNames = new ArrayList<>();
-        for(WebElement element: listElems) {
-            element.click();
+        public WebElement getAudioElems() {
+            return driver.findElement(By.className(AUDIO_FILE_LOCATOR));
+        }
+
+        public String downloadElems(WebElement listElem, String downloadDir) {
+            listElem.click();
             makeScreenshot();
-            String fileName = element.getAttribute("href").split("p[0-9]+/")[1].split(".mp3")[0].concat(".mp3");
+            String fileName = listElem.getAttribute("href").split("p[0-9]+/")[1].split(".mp3")[0].concat(".mp3");
             waitWhileFileDownloaded(downloadDir, fileName);
-            fileNames.add(fileName);
+
+            return fileName;
         }
 
-        return fileNames;
-    }
-
-    public void executeDownloadScript() {
+        public void executeDownloadScript() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         boolean needInjection = (Boolean)(js.executeScript("return this.$ === undefined;"));
         String script = "";
