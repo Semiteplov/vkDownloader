@@ -1,33 +1,36 @@
 import org.testng.annotations.Test;
-import pages.AudioPage;
 import pages.LoginPage;
-import pages.MainPage;
+import ru.yandex.qatools.allure.annotations.Title;
+import steps.AudioSteps;
+import steps.BaseSteps;
+import steps.LoginSteps;
+import steps.MainSteps;
 
 import java.io.*;
 
 
-public class RefactoringTest extends BaseTest {
+public class RefactoringTest extends BaseSteps {
+    MainSteps mainSteps = new MainSteps();
+    LoginSteps loginSteps = new LoginSteps();
+    AudioSteps audioSteps = new AudioSteps();
 
-    @Test(description = "Test audio page", priority = 0)
+    @Title("Загрузка музыки")
+    @Test(description = "Test audio page")
     public void audioPageTest() throws FileNotFoundException {
-        driver.get(baseUrl);
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.fillField(loginPage.getEmail(), properties.getProperty("login"));
-        loginPage.fillField(loginPage.getPassword(), properties.getProperty("password"));
+        getDriver().get(baseUrl);
+        loginSteps.fillField(new LoginPage().email, properties.getProperty("login"));
+        loginSteps.fillField(new LoginPage().password, properties.getProperty("password"));
 
-        loginPage.checkFillField(properties.getProperty("login"), loginPage.getEmail());
-        loginPage.checkFillField(properties.getProperty("password"), loginPage.getPassword());
+        loginSteps.checkFillField(properties.getProperty("login"), new LoginPage().email);
+        loginSteps.checkFillField(properties.getProperty("password"), new LoginPage().password);
 
-        loginPage.submit();
+        loginSteps.submit();
 
-        MainPage mainPage = new MainPage(driver);
-        AudioPage audioPage = new AudioPage(driver);
-        mainPage.clickOnMyAudio();
-        mainPage.checkMusicPage();
-        audioPage.executeDownloadScript();
+        mainSteps.clickOnMyAudio();
+        mainSteps.checkMusicPage();
 
-        String audioFileName = audioPage.downloadElems(audioPage.getAudioElems(), properties.getProperty("pathToDownload"));
+        audioSteps.executeDownloadScript();
 
-        assert new File(properties.getProperty("pathToDownload").concat(audioFileName)).exists();
+        audioSteps.isDownloaded();
     }
 }

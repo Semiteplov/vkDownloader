@@ -1,42 +1,45 @@
-package pages;
+package steps;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import steps.BaseSteps;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class AudioPage extends BasePage {
+public class AudioSteps {
     private static final String AUDIO_FILE_LOCATOR = "audio-download-link";
-    public WebDriverWait wait;
 
-        public AudioPage() {
-            PageFactory.initElements(BaseSteps.getDriver(), this);
-            wait = new WebDriverWait(BaseSteps.getDriver(),5);
+    @Step("скачиваем песню {0} в директорию {1}")
+    public String downloadElems(WebElement listElem, String downloadDir) {
+        listElem.click();
+        new BaseSteps().makeScreenshot();
+        String fileName = listElem.getAttribute("href").split("p[0-9]+/")[1].split(".mp3")[0].concat(".mp3");
+        waitWhileFileDownloaded(downloadDir, fileName);
+
+        return fileName;
+    }
+
+    @Step("ожидаем загрузку песни")
+    private void waitWhileFileDownloaded(String downloadPath, String fileName) {
+        boolean flag = false;
+        File dir = new File(downloadPath);
+
+        while (!flag) {
+            File[] dir_contents = dir.listFiles();
+            for (File dir_content : dir_contents) {
+                if (dir_content.getName().equals(fileName))
+                    flag = true;
+            }
         }
+    }
 
-        public WebElement getAudioElems() {
-            return BaseSteps.getDriver().findElement(By.className(AUDIO_FILE_LOCATOR));
-        }
-
-        public String downloadElems(WebElement listElem, String downloadDir) {
-            listElem.click();
-            new BaseSteps().makeScreenshot();
-            String fileName = listElem.getAttribute("href").split("p[0-9]+/")[1].split(".mp3")[0].concat(".mp3");
-            waitWhileFileDownloaded(downloadDir, fileName);
-
-            return fileName;
-        }
-
-        public void executeDownloadScript() {
+    @Step("выполняем скрипт для скачивания песни")
+    public void executeDownloadScript() {
         JavascriptExecutor js = (JavascriptExecutor) BaseSteps.getDriver();
         boolean needInjection = (Boolean)(js.executeScript("return this.$ === undefined;"));
         String script = "";
@@ -180,16 +183,14 @@ public class AudioPage extends BasePage {
         ((JavascriptExecutor)(BaseSteps.getDriver())).executeScript(script);
     }
 
-    private void waitWhileFileDownloaded(String downloadPath, String fileName) {
-        boolean flag = false;
-        File dir = new File(downloadPath);
+    @Step("получаем песню")
+    public WebElement getAudioElems() {
+        return BaseSteps.getDriver().findElement(By.className(AUDIO_FILE_LOCATOR));
+    }
 
-        while (!flag) {
-            File[] dir_contents = dir.listFiles();
-            for (File dir_content : dir_contents) {
-                if (dir_content.getName().equals(fileName))
-                    flag = true;
-            }
-        }
+    @Step("проверяем, скачалась ли песня")
+    public void isDownloaded() {
+        String audioFileName = new AudioSteps().downloadElems(new AudioSteps().getAudioElems(), BaseSteps.properties.getProperty("pathToDownload"));
+        assert new File(BaseSteps.properties.getProperty("pathToDownload").concat(audioFileName)).exists();
     }
 }
