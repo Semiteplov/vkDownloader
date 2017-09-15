@@ -1,4 +1,4 @@
-import org.testng.annotations.Test;
+import org.junit.Test;
 import pages.LoginPage;
 import ru.yandex.qatools.allure.annotations.Title;
 import steps.AudioSteps;
@@ -15,7 +15,7 @@ public class RefactoringTest extends BaseSteps {
     AudioSteps audioSteps = new AudioSteps();
 
     @Title("Загрузка музыки")
-    @Test(description = "Test audio page")
+    @Test
     public void audioPageTest() throws FileNotFoundException {
         getDriver().get(baseUrl);
         loginSteps.fillField(new LoginPage().email, properties.getProperty("login"));

@@ -1,11 +1,11 @@
 package steps;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import ru.yandex.qatools.allure.annotations.Attachment;
 import util.TestProperties;
 

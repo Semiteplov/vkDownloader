@@ -2,7 +2,8 @@ package pages;
 
 import org.openqa.selenium.*;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 
 public class BasePage {
 

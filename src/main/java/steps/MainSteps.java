@@ -5,7 +5,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.MainPage;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class MainSteps {
 

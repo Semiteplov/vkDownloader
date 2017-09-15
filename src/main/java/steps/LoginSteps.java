@@ -4,7 +4,8 @@ import org.openqa.selenium.WebElement;
 import pages.LoginPage;
 import ru.yandex.qatools.allure.annotations.Step;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 
 public class LoginSteps {
 
